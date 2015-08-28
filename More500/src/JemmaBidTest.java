@@ -39,7 +39,7 @@ public class JemmaBidTest {
 		tHand.cards.add(new Card(0,5));
 		tHand.cards.add(new Card(0,6));
 		tHand.cards.add(new Card(0,4));
-		assertEquals(1,JP.getInitaialBidValue(tHand,0)); //these cards are below 9
+		assertEquals(4,JP.getInitaialBidValue(tHand,0)); //these cards are below 9
 	}
 	
 	@Test

@@ -45,18 +45,34 @@ public class JemmaPlayer implements PlayerInt{
 
 	int getInitaialBidValue(Hand hand, int curSuit) {
 		int bidVal=0;
-		for (Card tempCard : hand.cards){
-			if (tempCard.suit==curSuit){
-				bidVal++;
+		for (int i=0;i<hand.length();i++){
+			Card curCard=hand.cards.get(i);
+			if (curCard.suit==curSuit){
+				bidVal++; //Add one for each of the trumps that they have
+			} else { //Off suit cards
+				if (curCard.value==13){
+					bidVal++;
+				} else {
+					//Count the cards below and the cards above
+					//CARDS BELOW
+					int cardsBelowCount=0;
+					//GAPS ABOVE
+					int gapsAbove=13-curCard.value;
+					for (int j=0;j<hand.length();j++){ //Look at all the other cards
+						if (hand.cards.get(j).suit==curCard.suit){ //Only consider cards in the same suit
+							if (hand.cards.get(j).value>curCard.value){ //This card is above so there is one less gap
+								gapsAbove--;
+							} else if (hand.cards.get(j).value<curCard.value) { //The player has a card below the current card
+								cardsBelowCount++;
+							}
+						}
+					}
+					if (gapsAbove<=cardsBelowCount){ //If you can protect the card
+						bidVal++;
+					}
+				}
 			}
 		}
-		
-		for (int suit=0;suit<4;suit++){
-			if (suit!=curSuit){
-				bidVal+=hand.protectedWinners();
-			}
-		}
-		
 		return bidVal;
 	}
 

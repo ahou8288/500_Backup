@@ -11,7 +11,7 @@ public class JemmaPlayer implements PlayerInt{
 	public Bid getBid(Hand hand, Team[] teams, ArrayList<Bid> prevBids) {
 		int maxPoints=0;
 		Bid maxBid=new Bid(-1,0);
-		//This is a test of commiting
+		//This will be overwritten
 		//Try the current hand in each of the suits
 		for (int curSuit=0;curSuit<4;curSuit++){
 			Hand tempHand=Game.incBowers(hand,curSuit); //get a hand with bowers

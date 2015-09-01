@@ -11,7 +11,7 @@ public class JemmaPlayer implements PlayerInt{
 	public Bid getBid(Hand hand, Team[] teams, ArrayList<Bid> prevBids) {
 		int maxPoints=0;
 		Bid maxBid=new Bid(-1,0);
-		//This will be overwritten
+		//This will be overwritten blah
 		//Try the current hand in each of the suits
 		for (int curSuit=0;curSuit<4;curSuit++){
 			Hand tempHand=Game.incBowers(hand,curSuit); //get a hand with bowers
@@ -238,12 +238,40 @@ public class JemmaPlayer implements PlayerInt{
 	public Card getCard(ArrayList<Bid> prevBids, Hand hand, ArrayList<Card> trickCards) {
 		int playerNum=trickCards.size()+1;
 		if (playerNum==4){
-			/*
+			/* if you are not already winning
 			 * Find the lowest legal non trump that wins
 			 * Find the lowest trump that wins
 			 * PlayLow
 			 */
 		} 
 		return null;
+	}
+	
+	public int playLow(Bid WinningBid,Hand hand,ArrayList<Card> trickCards){
+		int suitLed=trickCards.get(0).suit;
+		for (int i=hand.length()-1;i>=0;i--){ //Assumes hand is sorted so looks in reverse order to play the lowest card of the suit led
+			Card c = hand.cards.get(i);
+			if(c.suit==suitLed){
+				return i;
+			}
+		}
+		
+		//If the code reaches here then play an off suit card
+		int lowestVal=14; //find a card with the lowest number //TODO intentional short suiting
+		int lowestValIndex=-1; //store the card to choose
+		for (int i=0;i<hand.length();i++){
+			Card c = hand.cards.get(i);
+			if(c.suit!=WinningBid.suit&&c.value<lowestVal){ //don't waste a trump
+				lowestVal=c.value;
+				lowestValIndex=i;
+			}
+		}
+		if (lowestValIndex>=0){ //If a non trump was selected
+			return lowestValIndex;
+		}
+		
+		//The hand is all trumps
+		//play the lowest value trump
+		return hand.length()-1;
 	}
 }

@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class JemmaPlayer implements PlayerInt{
 	
 	public Team team;
+	Bid selectedBid;
 	
 	//Constructor
 	public JemmaPlayer() {	}
@@ -236,28 +237,37 @@ public class JemmaPlayer implements PlayerInt{
 	
 	@Override
 	public Card getCard(ArrayList<Bid> prevBids, Hand hand, ArrayList<Card> trickCards) {
+		/* if you are not already winning
+		 * Find the lowest legal non trump that wins
+		 * Find the lowest trump that wins
+		 * PlayLow
+		 */
+		//TODO selectedBid
+		selectedBid=prevBids.get(prevBids.size()-1);
 		int playerNum=trickCards.size()+1;
 		if (playerNum==4){
-			/* if you are not already winning
-			 * Find the lowest legal non trump that wins
-			 * Find the lowest trump that wins
-			 * PlayLow
-			 */
+			if (trickWinner.findVictor(trickCards,selectedBid)==1){ //if the partner won
+				playLow(selectedBid,hand,trickCards);
+			}
 		} 
 		return null;
 	}
 	
 	public int playLow(Bid WinningBid,Hand hand,ArrayList<Card> trickCards){
 		int suitLed=trickCards.get(0).suit;
+		boolean hasTrumpsRemaining=false; //Assume that there are no trumps until one is found
+		
+		//Play the suit led
 		for (int i=hand.length()-1;i>=0;i--){ //Assumes hand is sorted so looks in reverse order to play the lowest card of the suit led
 			Card c = hand.cards.get(i);
 			if(c.suit==suitLed){
 				return i;
 			}
+			hasTrumpsRemaining=hasTrumpsRemaining||c.suit==WinningBid.suit;
 		}
 		
 		//If the code reaches here then play an off suit card
-		int lowestVal=14; //find a card with the lowest number //TODO intentional short suiting
+		int lowestVal=14; //find a card with the lowest number
 		int lowestValIndex=-1; //store the card to choose
 		for (int i=0;i<hand.length();i++){
 			Card c = hand.cards.get(i);
